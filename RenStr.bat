@@ -1,14 +1,15 @@
 @echo off
+rem from filename replace specific string with target string.
 SETLOCAL ENABLEDELAYEDEXPANSION
-set /p T=Input file type:
-set /p str=Input the string:
-set /p tar=Input the target string:
+set /p T=Types:
+set /p str=Replaced String:
+set /p tar=Target String:
 for %%a in (%T%) do (
-    set type=!type! *.%%a
+    set type=!type! "*%str%*.%%a"
 )
 for /f "delims=" %%a in ('dir /b !type!') do (
-    set "name=%%a"
-    echo "!name:%str%=%tar%!"
-    rename "!name!" "!name:%str%=%tar%!"
+    set "name=%%~na"
+    echo "%%~a" =^> "!name:%str%=%tar%!%%~xa"
+    rename "%%~a" "!name:%str%=%tar%!%%~xa"
 )
 pause

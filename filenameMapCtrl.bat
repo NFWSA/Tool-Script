@@ -9,11 +9,18 @@ rem use space split file type
 set fileType=png
 rem ---- user config end
 
+set srcLines=0
+for /f "tokens=1,2* delims=:" %%a in ('findstr /n ".*" "%~dpnx0"') do (
+	set /a srcLines+=1
+	if "%%b" == "END-FILE-MARK" goto :lineFin
+)
+:lineFin
+
 for %%a in (%fileType%) do (
     set t=!t! *.%%a
 )
 set "fileType=%t%"
-for /f "tokens=1,2* delims=^|" %%a in ('more "%~dpnx0" +87') do (
+for /f "tokens=1,2* delims=^|" %%a in ('more /e "%~dpnx0" +%srcLines%') do (
     set "name[%%a]=%%b"
     set "tar[%%b]=%%a"
 )
@@ -85,3 +92,4 @@ for /f "delims=" %%a in ('dir /b %fileType%') do (
 pause
 goto :EOF
 
+END-FILE-MARK
